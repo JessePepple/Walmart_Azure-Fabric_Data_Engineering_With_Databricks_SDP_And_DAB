@@ -1,0 +1,15 @@
+{
+	"name": "azwalmartdatafactory",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "uksouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "5b314be6-8e8d-4ad2-8bf0-3af82ac1c848",
+		"tenantId": "6e0eb70b-408a-43a1-aa52-49b6ae58286b"
+	}
+}
