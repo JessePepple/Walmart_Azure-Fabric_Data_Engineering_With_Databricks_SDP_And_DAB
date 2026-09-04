@@ -1,0 +1,131 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForAllFiles",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.loop_input",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "CopyALLData",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "HttpReadSettings",
+										"requestMethod": "GET"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "source_csv",
+									"type": "DatasetReference",
+									"parameters": {
+										"p_url": {
+											"value": "@item().p_url",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "sink_ds",
+									"type": "DatasetReference",
+									"parameters": {
+										"p_folder": {
+											"value": "@item().p_folder",
+											"type": "Expression"
+										},
+										"p_file": {
+											"value": "@item().p_file",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"loop_input": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"p_url": "anshlambagit/Walmart_Airflow_DBT_Project/refs/heads/main/walmart_dataset/data/customers.csv",
+						"p_folder": "Customers",
+						"p_file": "customers.parquet"
+					},
+					{
+						"p_url": "anshlambagit/Walmart_Airflow_DBT_Project/refs/heads/main/walmart_dataset/data/employees.csv",
+						"p_folder": "Employees",
+						"p_file": "customers.parquet"
+					},
+					{
+						"p_url": "anshlambagit/Walmart_Airflow_DBT_Project/refs/heads/main/walmart_dataset/data/products.csv",
+						"p_folder": "Products",
+						"p_file": "products.parquet"
+					},
+					{
+						"p_url": "anshlambagit/Walmart_Airflow_DBT_Project/refs/heads/main/walmart_dataset/data/orders.csv",
+						"p_folder": "Orders",
+						"p_file": "Orders.parquet"
+					},
+					{
+						"p_url": "anshlambagit/Walmart_Airflow_DBT_Project/refs/heads/main/walmart_dataset/data/order_items.csv",
+						"p_folder": "Order_Items",
+						"p_file": "order_items.parquet"
+					},
+					{
+						"p_url": "anshlambagit/Walmart_Airflow_DBT_Project/refs/heads/main/walmart_dataset/data/stores.csv",
+						"p_folder": "Stores",
+						"p_file": "stores.parquet"
+					}
+				]
+			}
+		},
+		"annotations": []
+	}
+}
