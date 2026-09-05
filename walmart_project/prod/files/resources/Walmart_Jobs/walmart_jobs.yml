@@ -1,0 +1,42 @@
+resources:
+  jobs:
+    Walmart_Pipeline:
+      name: Walmart_Pipeline
+      tasks:
+        - task_key: Bronze_Ingestion
+          notebook_task:
+            notebook_path: ../../Users/jessepepple36@gmail.com/walmart_project/src/Bronze_Ingestion/Bronze_Ingestion
+            source: WORKSPACE
+        - task_key: SilverTransformationEnrichment
+          depends_on:
+            - task_key: Bronze_Ingestion
+          notebook_task:
+            notebook_path: ../../jessepepple36@gmail.com/walmart_project/src/Silver_Transformation
+              & Enrichment/Silver_Transformation
+            source: WORKSPACE
+        - task_key: Gold_Cur_Pipeline
+          depends_on:
+            - task_key: SilverTransformationEnrichment
+          pipeline_task:
+            pipeline_id: 67f69d78-52c3-4b12-ae71-48174b5825c9
+        - task_key: Parameters
+          depends_on:
+            - task_key: Gold_Cur_Pipeline
+          notebook_task:
+            notebook_path: ../../jessepepple36@gmail.com/walmart_project/src/Write_To_Data_Lake/Parameters
+            source: WORKSPACE
+        - task_key: For_All_Curated_Data
+          depends_on:
+            - task_key: Parameters
+          for_each_task:
+            inputs: "{{tasks.Parameters.values.param}}"
+            task:
+              task_key: For_All_Curated_Data_iteration
+              notebook_task:
+                notebook_path: ../../jessepepple36@gmail.com/walmart_project/src/Write_To_Data_Lake/Write_To_Gold
+                base_parameters:
+                  table_val: "{{input.table_val}}"
+                source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
