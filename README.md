@@ -188,7 +188,7 @@ To implement this efficiently, I utilised Spark Declarative Pipelines (SDP) to d
 
 I also implemented data quality expectations within the pipelines to validate the data before it was made available for analytical consumption. These expectations provided controls around the quality and integrity of the curated datasets, helping prevent poor-quality records from being served to downstream consumers.
 
-Overall, this stage transformed the clean Silver datasets into business-ready analytical models, providing both historical dimensional analysis through SCD Type 2 and current-state Fact/OBT datasets for efficient downstream consumption.
+Overall, this stage transformed the clean Silver datasets into business-ready analytical models, providing both historical dimensional analysis through SCD Type 2 and current-state Fact/OBT datasets for efficient downstream consumption. I also made the Data optimised in the pipeline, using the autoOptimized initaion for SDP
 
 
 ### Dim_Customers
@@ -243,9 +243,146 @@ Overall, this stage transformed the clean Silver datasets into business-ready an
 
 ## Expectations were met successfully
 
-After 
+Following the successful execution of the curated Spark Declarative Pipeline (SDP), all configured data quality expectations and validation checks completed successfully with no issues identified. This confirmed that the curated Fact, Dimension, and OBT datasets met the defined quality requirements before being exposed to downstream consumers.
+
+The successful validation provided confidence that the curated datasets were reliable, consistent, and fit for purpose, allowing them to be served for both analytical and Machine Learning/Data Science workloads.
 
 <img width="1423" height="712" alt="Screenshot 2026-09-04 at 23 47 51" src="https://github.com/user-attachments/assets/8631d849-fd12-4f12-8759-d714bba77876" />
+
+
+## Phase 5: Finishing touches and deploying to Fabric Warehouse and SQL Warehouse
+
+Phase 5 — Deployment, Testing & Data Consumption
+
+With the curated datasets successfully validated, I moved into the deployment and downstream consumption stage of the project. The curated datasets were deployed to the Gold layer within the data lake, providing the final trusted data assets for downstream analytical and Machine Learning workloads.
+
+I then configured the downstream integration required to make these curated datasets available within Microsoft Fabric, enabling cross-platform consumption of the Gold-layer data. This allowed the curated datasets to be accessed within Fabric without unnecessarily duplicating the underlying data.
+
+As part of the deployment process, I also implemented and executed unit tests for the Python utility and transformation components, validating the functionality and reliability of the reusable code developed throughout the project.
+
+The Databricks environment and associated resources were deployed using Databricks Asset Bundles, with the implementation managed through GitHub version control. This provided a repeatable deployment process and ensured that the Databricks code and configuration remained version-controlled.
+
+Finally, I validated the availability and integrity of the curated datasets within the Databricks SQL Warehouse, confirming that the Gold-layer data had been successfully served and was accessible for downstream analytical consumption.
+
+Overall, this final stage completed the transition from data ingestion and transformation to production-ready data delivery, with the curated datasets successfully deployed, tested, validated, and made available across Databricks and Microsoft Fabric for BI, analytics, and ML/Data Science use cases.
+
+### Gold DataLake write
+As the final stage of the project, I created an end-to-end orchestration pipeline that connects the complete data lifecycle, from initial ingestion through to the final Gold-layer delivery.
+
+The pipeline executes the workflow in sequence:
+
+Ingestion → Silver Transformation → Gold Curation → Writing Curated Data to the Gold Layer
+
+To make the final data-writing process dynamic, I utilised the ForEach activity within the Databricks job to iterate through the curated datasets produced by the Gold layer. I also implemented dbutils.jobs.taskValues.set to pass the relevant dataset information between tasks. This allowed a single downstream writing task to dynamically process and write the required curated datasets rather than creating individual task activities for each dataset.
+
+This approach significantly simplified the orchestration of the final Gold-layer delivery by making the workflow dynamic, reusable, and easier to maintain. The successful execution of the pipeline confirmed that the complete data flow could run from ingestion through transformation, curation, and final Gold-layer delivery as a unified process.
+
+Overall, this completed the project's end-to-end automation, demonstrating that the individual components of the platform could operate together as a cohesive and production-oriented data pipeline.
+
+ <img width="1423" height="631" alt="Screenshot 2026-09-05 at 00 09 37" src="https://github.com/user-attachments/assets/4e95b41f-6b6f-4461-9c6b-118142b34887" />
+
+### Python Class Testing
+
+As part of the deployment phase, I initiated unit testing for the reusable Python classes developed for the Silver-layer transformation process. The tests were designed to validate that the individual transformation methods were functioning as expected and producing the correct results.
+
+The testing covered the core transformation utilities used within the pipeline, ensuring that the reusable classes could reliably perform their intended operations before being deployed as part of the wider data platform.
+
+The test suite executed successfully with all tests passing, providing confidence in the reliability and consistency of the Python transformation components and supporting the overall quality of the production deployment.
+
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 00 47 17" src="https://github.com/user-attachments/assets/d335cd76-6e22-4603-b1a8-894f94814c37" />
+
+
+
+### Databricks SQL Warehouse Validation
+
+Following the successful completion of the Python class tests, I validated the curated Gold datasets within Databricks SQL Warehouse to ensure that the data had been successfully delivered and was accessible for downstream consumption.
+
+I performed validation checks against the curated datasets to confirm that the Fact, Dimension, and OBT tables were available and contained the expected data following the end-to-end pipeline execution.
+
+The validation was successful, confirming that the curated datasets were correctly served through the Databricks SQL Warehouse and were ready to support downstream BI, analytical, and Data Science/ML workloads.
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 00 59 00" src="https://github.com/user-attachments/assets/d81d0c09-dcc4-435a-b94b-44a220d03429" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 00 59 19" src="https://github.com/user-attachments/assets/58741adf-cb03-4af6-8a49-b4355f312892" />
+
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 00 58 42" src="https://github.com/user-attachments/assets/5270b413-aba2-464e-9ba8-5f8b6732d252" />
+
+
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 01 00 02" src="https://github.com/user-attachments/assets/a1e31618-a9ba-45dc-a954-69092979eb2c" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 01 00 25" src="https://github.com/user-attachments/assets/2a778345-475c-4edc-ba88-6da2d743204c" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 01 00 45" src="https://github.com/user-attachments/assets/5459fa28-9a3b-4e61-9fe7-e12a288a1794" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 01 01 06" src="https://github.com/user-attachments/assets/254ea57a-09b9-4961-8962-92bc77a4bbe6" />
+
+### Dashboards
+
+Following the successful validation of the curated datasets in Databricks SQL Warehouse, I created dummy dashboards within Databricks to demonstrate the analytical consumption of the Gold-layer data.
+
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 02 24 27" src="https://github.com/user-attachments/assets/7e03aafc-ad4b-4b56-8318-d1e213656857" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 02 25 58" src="https://github.com/user-attachments/assets/1aff10f5-6aff-4128-9aea-173465974879" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 02 26 36" src="https://github.com/user-attachments/assets/7b3ad621-47d1-464e-a212-e572d2e933fe" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 10 30 27" src="https://github.com/user-attachments/assets/a89a4ddf-dcea-4ea8-b29e-05c5bc68985b" />
+
+### Asset Bundles Deployment
+
+Followed afterwards I and deployed our Databricks asset bundles 
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 01 15 05" src="https://github.com/user-attachments/assets/3c1043a9-c335-46de-ad2d-b1d0c97c196b" />
+
+
+### Loading to Fabric using shortcuts
+
+
+With the curated datasets successfully available through Databricks SQL Warehouse, I moved on to integrating the Gold-layer data with Microsoft Fabric for downstream consumption.
+
+To establish secure access between Fabric and the data lake, I configured the required IAM permissions, granting the appropriate Fabric user access to the underlying data. This ensured that Fabric could securely access the curated datasets while maintaining controlled permissions over the data lake environment.
+
+For the data integration itself, I chose to utilise Microsoft Fabric OneLake Shortcuts. Although there are several approaches available for making data accessible within Fabric like Mirroring to name a few, I selected Shortcuts as the most suitable approach for this project because they allow Fabric to reference the existing curated data in the data lake without creating an additional physical copy of the datasets.
+
+This approach reduces unnecessary data duplication while allowing the same curated Gold-layer datasets to be consumed within the Fabric ecosystem. It also provides a more efficient cross-platform architecture by maintaining the data in its existing storage location while exposing it to Fabric for downstream analytical workloads.
+
+The successful implementation of the IAM configuration and OneLake Shortcuts enabled the curated datasets to be accessed within Microsoft Fabric, completing the integration between the Databricks-based lakehouse environment and the Fabric analytics ecosystem.
+
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 01 50 49" src="https://github.com/user-attachments/assets/0b41060b-6c70-4524-97fd-64c2a05492da" />
+
+
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 01 52 40" src="https://github.com/user-attachments/assets/8e61266f-1b52-48c0-bea3-30485954a52a" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 01 56 05" src="https://github.com/user-attachments/assets/003ceb0f-06fe-41f8-b631-2489bb6b5b30" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 01 56 50" src="https://github.com/user-attachments/assets/93f676a1-28a6-492b-a74a-4f5713bfde62" />
+
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 01 58 28" src="https://github.com/user-attachments/assets/936500a4-7ace-459b-ae01-308f4ba39756" />
+
+### Data Validation and Dashboard Creation
+
+Once the curated datasets were successfully made available within Microsoft Fabric, I created the corresponding Lakehouse tables and validated the data to ensure that the datasets had been loaded correctly and maintained their expected structure and values.
+
+Following the Lakehouse validation, I provisioned a Fabric Data Warehouse to provide a dedicated environment for structured analytical consumption. This enabled the curated datasets to be further utilised for SQL-based analysis, reporting, and dashboard development within the Fabric ecosystem.
+
+This stage confirmed that the data could successfully transition from the underlying data lake into the Fabric Lakehouse and Warehouse, providing a validated foundation for downstream analytics and visualisation.
+
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 02 07 42" src="https://github.com/user-attachments/assets/2f070d34-73a8-4edf-8d87-9e7d66ad1793" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 02 11 13" src="https://github.com/user-attachments/assets/949fab93-6e6e-4cbb-b097-8dee4555e13d" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 02 19 40" src="https://github.com/user-attachments/assets/e4274bc2-a602-4db1-9d55-5bfc3bcd4b9c" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 02 21 10" src="https://github.com/user-attachments/assets/f158aa37-de35-474c-8f9a-d83015c5d9d0" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 02 14 08" src="https://github.com/user-attachments/assets/5994f7d0-3d8e-43f7-a0e9-2f4457706c43" />
+
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 02 14 57" src="https://github.com/user-attachments/assets/0ce8d7eb-71c8-4ef3-8929-49cdd6997e0b" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 02 16 36" src="https://github.com/user-attachments/assets/edaab304-5594-468b-880d-7e91cab9cd07" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 02 17 49" src="https://github.com/user-attachments/assets/327ba24f-5f4a-41e9-8a7c-811d978e47be" />
+<img width="1423" height="706" alt="Screenshot 2026-09-05 at 02 19 34" src="https://github.com/user-attachments/assets/ac82ec7d-f747-42c6-8ba9-cb8c5d77af46" />
+
+
+### Lesson Learned
+
+Project Conclusion & Architectural Reflection
+
+With the completion of the project, the end-to-end data platform successfully demonstrated metadata-driven ingestion, incremental processing, scalable transformations, automated CDC/SCD handling, CI/CD, data quality, monitoring, and dual-platform data consumption across Databricks and Microsoft Fabric.
+
+One architectural learning I took from this project relates to the use of MERGE INTO within the Silver layer. While implementing MERGE INTO for incremental upserts is a valid approach and worked successfully within this project, I believe that for future workflows I would keep the Silver layer more focused on data cleansing, deduplication, null handling, standardisation, and business transformations rather than implementing SCD logic manually within the layer.
+
+Since Auto CDC Flow can automate SCD Type 1 and Type 2 processing, I would prefer to centralise this change-data and historical tracking logic within the appropriate curated layer rather than manually implementing similar logic in Silver and then applying SCD processing again in Gold. This would create a cleaner separation of responsibilities between the layers and reduce unnecessary duplication of transformation logic.
+
+This is an architectural preference based on what I learned while developing the project rather than a claim that the approach implemented here is incorrect. The implementation was successful and provided valuable practical experience in understanding how different approaches to incremental processing, CDC, and dimensional modelling can be applied within a modern lakehouse architecture.
+
+Overall, this project has strengthened my understanding of production-oriented data engineering, particularly around designing reusable ingestion frameworks, building maintainable transformation pipelines, implementing automated CDC/SCD processing, applying data quality controls, deploying through CI/CD, and making curated data available across multiple analytical platforms.
+
+The project therefore concludes with a fully functioning end-to-end data platform, while also providing architectural lessons that I can apply to make future implementations cleaner, more maintainable, and better aligned with the capabilities of modern Databricks data engineering workflows.
 
 
 
