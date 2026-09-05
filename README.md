@@ -111,7 +111,6 @@ Following the development of the ingestion pipelines, I integrated **Azure Logic
 
 Once the pipeline development was completed, I committed the final implementation to GitHub through our feature branch. I then created a Pull Request (PR) from the development branch into the main branch, allowing the changes to be reviewed and validated before being merged into the main codebase. This provided a controlled deployment workflow and ensured that the completed pipeline was version-controlled and maintained within the project repository.
 
-<img width="1436" height="712" alt="Screenshot 2026-09-03 at 03 10 10" src="https://github.com/user-attachments/assets/f85432f9-f76b-4983-9142-1d9877e3eb6b" />
 <img width="1436" height="712" alt="Screenshot 2026-09-03 at 03 11 32" src="https://github.com/user-attachments/assets/b45360c7-db02-42ad-8cb5-297ed1885731" />
 
 
