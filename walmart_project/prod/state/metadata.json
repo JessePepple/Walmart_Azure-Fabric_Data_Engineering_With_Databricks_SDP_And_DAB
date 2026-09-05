@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "config": {
+    "bundle": {
+      "name": "walmart_project",
+      "target": "prod",
+      "mode": "production",
+      "git": {
+        "bundle_root_path": "."
+      }
+    },
+    "workspace": {
+      "file_path": "/Workspace/Users/jessepepple36@gmail.com/.bundle/walmart_project/prod/files"
+    },
+    "resources": {},
+    "presets": {
+      "source_linked_deployment": false
+    }
+  },
+  "extra": {
+    "git_folder_path": "/Workspace/Users/jessepepple36@gmail.com/walmart_project"
+  }
+}

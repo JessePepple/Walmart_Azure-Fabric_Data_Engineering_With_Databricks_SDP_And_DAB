@@ -1,0 +1,15 @@
+resources:
+  pipelines:
+    pipeline_gold_curated_sdp:
+      name: Gold_Curated_SDP
+      libraries:
+        - glob:
+            include: ../../jessepepple36@gmail.com/walmart_project/src/Gold_Curated_SDP/transformations/**
+      schema: gold
+      continuous: false
+      development: false
+      photon: true
+      channel: CURRENT
+      catalog: ${var.catalog}
+      serverless: true
+      root_path: /../../jessepepple36@gmail.com/walmart_project/src/Gold_Curated_SDP
